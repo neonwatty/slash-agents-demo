@@ -58,16 +58,16 @@ Both save you from repeated prompting and let Claude use these workflows too.
 
 # Slash Commands: Inner Loop Use Cases
 
-**These are workflows you do dozens of times per day:**
+**Workflows you do dozens of times per day:**
 
 | Command | What It Does |
 |---------|--------------|
-| `/commit-push-pr` | Commit changes, push, and create a PR |
-| `/test-and-commit` | Run tests, then commit if passing |
-| `/validate` | Run linting, type checks, formatting |
+| `/commit-push-pr` | Commit, push, and create a PR |
+| `/test-and-commit` | Run tests, commit if passing |
+| `/validate` | Lint, type check, format |
 
-> "I use slash commands for every 'inner loop' workflow that I end up doing many times a day. This saves me from repeated prompting."
-> — Boris Cherny, creator of Claude Code
+> "I use slash commands for every 'inner loop' workflow. This saves me from repeated prompting."
+> — Boris Cherny
 
 ---
 
@@ -87,45 +87,71 @@ Recent commits for style reference:
 Create a commit, push to remote, and open a PR.
 ```
 
-**Why this matters:**
-- Provides Claude with real-time information
-- Avoids back-and-forth with the model
-- Makes commands run faster
+**Why this matters:** Real-time context, less back-and-forth, faster execution.
+
+---
+
+# Slash Commands: Three Ways to Invoke
+
+| Method | Example |
+|--------|---------|
+| **Direct** | Type `/validate` |
+| **Conversational** | "Can you validate the code?" |
+| **Autonomous** | Claude runs it as part of a larger task |
+
+**Key insight:** Slash commands are exposed as "skills" — enabling conversational and autonomous invocation.
+
+> "Make this change and prepare it for PR"
+> → Claude autonomously runs `/validate` → `/commit` → `/pr`
 
 ---
 
 # Subagents: What They Are
 
-**Pre-configured AI personalities with specific expertise**
+**Specialized AI "team members" with focused expertise**
 
-- Operate with separate context windows
-- Prevent "knowledge pollution" in main conversation
-- Control their own tool access
+- Separate context windows (prevents knowledge pollution)
+- Work independently, then report back
 - Defined in `.claude/agents/`
-
-**Think of them as specialized team members:**
-- Each has a focused domain
-- Called in when their expertise is needed
-- Work independently then report back
 
 ---
 
 # Subagents: Use Cases
 
-**Examples from the Claude Code team:**
+**From Boris Cherny's setup:**
 
 | Agent | Purpose |
 |-------|---------|
-| `code-simplifier` | Simplifies code after Claude finishes working |
-| `verify-app` | Has detailed instructions for testing end-to-end |
+| `code-simplifier` | Refactor for clarity |
+| `verify-app` | End-to-end testing |
+| `build-validator` | Compilation checks |
+| `code-architect` | Design review |
 
-> "Similar to slash commands, I think of subagents as automating the most common workflows for most PRs."
+> "I think of subagents as automating the most common workflows for most PRs."
 > — Boris Cherny
 
-**Other ideas:**
-- `security-reviewer` - Check for vulnerabilities
-- `docs-writer` - Generate documentation
-- `test-generator` - Create comprehensive tests
+**Other ideas:** `security-reviewer`, `docs-writer`, `test-generator`
+
+---
+
+# Demo: Our Agents in Action
+
+**Three agents for WienerMatch:**
+
+```
+.claude/agents/
+├── verify-app.md
+├── code-simplifier.md
+└── component-reviewer.md
+```
+
+| Agent | Output |
+|-------|--------|
+| `verify-app` | "All 8 tests passed: add, toggle, delete, filters..." |
+| `component-reviewer` | "2 critical, 5 warnings: missing aria-label..." |
+| `code-simplifier` | "Extract filter buttons to map, saves ~15 lines..." |
+
+**How it works:** Agent reads `.md` file → follows instructions → reports back
 
 ---
 
@@ -144,43 +170,50 @@ Create a commit, push to remote, and open a PR.
 
 ---
 
+# Two Philosophies, Both Valid
+
+| | Boris Cherny | Peter Steinberger |
+|--|--------------|-------------------|
+| **Style** | Specialized subagents | Parallel visible agents |
+| **Why** | Context separation | Full visibility |
+| **Coordination** | Agents report back | Watch all agents work |
+
+**Both work.** Choose based on:
+- Specialized roles vs. direct observation
+- Context isolation vs. visibility
+- Delegate vs. steer
+
+> No single "correct" setup — customize to your workflow.
+
+---
+
 # Key Takeaway: The Verification Loop
 
-> "Probably the most important thing to get great results out of Claude Code — give Claude a way to verify its work."
+> "Give Claude a way to verify its work." — Boris Cherny
 
-**Verification can 2-3x the quality of results**
-
-Both slash commands and subagents enable this:
+**Verification can 2-3x result quality.**
 
 ```
 ┌──────────┐    ┌──────────┐    ┌──────────┐
 │  Write   │───▶│  Verify  │───▶│  Refine  │
-│  Code    │    │  Output  │    │  Result  │
 └──────────┘    └──────────┘    └──────────┘
       ▲                               │
       └───────────────────────────────┘
 ```
 
+Both slash commands and agents enable this loop.
+
 ---
 
 # Getting Started
 
-**1. Create the commands directory:**
 ```bash
-mkdir -p .claude/commands
+mkdir -p .claude/commands .claude/agents
 ```
 
-**2. Start with your most repeated prompt**
-- What do you type to Claude multiple times a day?
-- Turn that into a slash command
-
-**3. Iterate and check into git**
-- Share with your team
-- Update when Claude does something wrong
-
-**4. Graduate to subagents**
-- When you need specialized expertise
-- When context separation helps
+1. **Start with your most repeated prompt** → slash command
+2. **Add specialized reviews** → agent instruction files
+3. **Check into git** → share with team, iterate over time
 
 ---
 
@@ -191,6 +224,7 @@ mkdir -p .claude/commands
 
 **Source for this presentation:**
 - [Boris Cherny's Twitter Thread](https://x.com/bcherny/status/2007179832300581177)
-- [DEV Community Breakdown](https://dev.to/sivarampg/how-the-creator-of-claude-code-uses-claude-code-a-complete-breakdown-4f07)
+- [How Boris Uses Claude Code (paddo.dev)](https://paddo.dev/blog/how-boris-uses-claude-code/)
+- [Just Talk To It (Peter Steinberger)](https://steipete.me/posts/just-talk-to-it)
 
 **Start automating your inner loop today.**
