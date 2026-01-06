@@ -1,6 +1,10 @@
 # Commit Changes
 
-Review the current changes, stage all relevant files, and create a commit with a clear, descriptive message.
+Current changes:
+!git status --short
+!git diff --stat
+
+Review the changes above, stage relevant files, and create a commit with a clear message.
 
 The commit message should:
 - Summarize what changed and why

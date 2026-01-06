@@ -1,11 +1,14 @@
 # Validate Code
 
-Run code quality checks to ensure everything is ready to commit.
+Run the project's code quality checks:
 
-Check for:
-- Linting errors
-- Type errors (if applicable)
-- Failing tests
-- Any obvious issues
+Lint results:
+!npm run lint 2>&1 || true
 
-Report what passed and what needs attention.
+Unused code check (knip):
+!npm run knip 2>&1 || true
+
+Build check:
+!npm run build 2>&1 || true
+
+Review the output above and report what passed and what needs fixing.
